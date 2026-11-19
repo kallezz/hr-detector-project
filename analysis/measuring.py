@@ -4,13 +4,11 @@ from piotimer import Piotimer
 from config import Pins, Sampling
 from hardware.ppg_sensor import PPGSensor
 
-sensor = PPGSensor
-
 
 class PpgSampler:
     
     def __init__(self, sensor):
-        self._sensor = sensor
+        self._sensor = PPGSensor()
         self._fifo = Fifo(Sampling.FIFO_SIZE)
         self._timer = None
         self._tick_handler = self._on_tick
