@@ -1,11 +1,21 @@
 class Pins:
-    PPG_SENSOR_ADC = 26      # set these to match your wiring
+    PPG_SENSOR_ADC = 26
     OLED_SDA = 14
     OLED_SCL = 15
     HEARTBEAT_LED = 20
-    BUTTON_OK = 12
     ENCODER_A = 10
     ENCODER_B = 11
+    ENCODER_BUTTON = 12
+    BUTTON_SW_0 = 9
+    BUTTON_SW_1 = 8
+    BUTTON_SW_2 = 7
+
+class Encoder:
+    FIFO_SIZE = 30
+    FIFO_TYPECODE = 'i'
+    TURN_LEFT = -1
+    TURN_RIGHT = 1
+    BUTTON_DEBOUNCE_MS = 200
 
 class Sampling:
     RATE_HZ = 250
