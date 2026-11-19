@@ -21,15 +21,20 @@ class Sampling:
     RATE_HZ = 250
     FIFO_DEPTH = 64          # how many samples you read per batch
     BUTTON_DEBOUNCE_MS = 200
+    FIFO_SIZE = 256
 
 class Analysis:
     MIN_PLAUSIBLE_BPM = 30
     MAX_PLAUSIBLE_BPM = 240
     BPM_UPDATE_INTERVAL_S = 3        # criteria: at least once per 5 s
-    PEAK_THRESHOLD_RATIO = 0.6       # tune against real data
+    PEAK_THRESHOLD_RATIO = 0.7       # tune against real data
     MIN_PEAK_DISTANCE_MS = 250
     HRV_WINDOW_S = 30                # criteria: at least 30 s
     SMOOTHING_WINDOW = 5
+    THRESHOLD_WINDOW_S = 2          
+    THRESHOLD_UPDATE_SAMPLES = 25   
+    MIN_SIGNAL_AMPLITUDE = 700      
+    BEATS_TO_AVERAGE = 5
 
 class Display:
     WIDTH = 128
