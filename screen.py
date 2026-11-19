@@ -4,7 +4,6 @@ from hardware.input_events import InputEvent
 from ui import layout
 from ui.screen_ids import ScreenId
 
-
 class Screen:
 
     TITLE = ""
