@@ -42,6 +42,9 @@ class Display:
     LINE_HEIGHT = 8
     GRAPH_TOP = 16
     GRAPH_HEIGHT = 40
+    I2C_ID = 1
+    I2C_FREQ = 400000
+    I2C_ADDRESS = 0x3C
 
 class Network:
     WIFI_CONNECT_TIMEOUT_S = 15
@@ -57,8 +60,23 @@ class Storage:
     HISTORY_FILE = "history.json"
     HISTORY_MAX_ENTRIES = 5          # criteria: at least 3
 
+class Input:
+    LEFT = "left"
+    RIGHT = "right"
+    PRESS = "press"
+
+class ScreenId:
+    MENU = "menu"
+    HEART_RATE = "heart_rate"
+    HRV = "hrv"
+    KUBIOS = "kubios"
+    HISTORY = "history"
+
 class Ui:
     ERROR_RETURN_TIMEOUT_S = 3       # from the error screen in the criteria
     MENU_ITEMS = ("Measure HR", "HRV analysis", "Kubios", "History")
+    MENU_TARGETS = (ScreenId.HEART_RATE, ScreenId.HRV, ScreenId.KUBIOS, ScreenId.HISTORY)
+    MENU_X = 0
+    MENU_CURSOR = ">"
     FRAME_INTERVAL_MS = 50
     PATIENT_NAME = "Patient"         # level 4: sent with MQTT data

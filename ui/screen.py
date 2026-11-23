@@ -1,32 +1,19 @@
-"""Base class that every screen inherits from."""
-
-from hardware.input_events import InputEvent
-from ui import layout
-from ui.screen_ids import ScreenId
-
 class Screen:
-
-    TITLE = ""
-
-    def __init__(self, display, navigator):
-        self._display = display
-        self._navigator = navigator
+    """Base class for all screens. Subclasses override what they need."""
 
     def enter(self):
+        """Called when the screen becomes active."""
 
-
-    def update(self):
-       return False
+    def exit(self):
+        """Called when leaving the screen (stop sampling, free resources)."""
 
     def handle_input(self, event):
-        if event == InputEvent.PRESS:
-            self._navigator.go_to(ScreenId.MENU)
+        """Handle an Input event. Return a ScreenId to switch, or None."""
+        return None
 
-    def draw(self):
-        self._display.draw_text(
-            self.TITLE, layout.SCREEN_TEXT_X, layout.SCREEN_TITLE_Y
-        )
-        self._display.draw_text(
-            layout.BACK_HINT_TEXT, layout.SCREEN_TEXT_X, layout.SCREEN_HINT_Y
-        )
+    def update(self):
+        """Called every frame. Return a ScreenId to switch, or None."""
+        return None
 
+    def draw(self, display):
+        """Draw the screen. Called every frame."""

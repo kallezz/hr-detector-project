@@ -1,36 +1,24 @@
-from machine import Pin, I2C
-from ssd1306 import SSD1306_I2C
-import time
-from startup import Startup
-from button import Button
+from config import ScreenId, Ui
+from hardware.display import Display
+from hardware.encoder import Encoder
+from ui.app import App
+from ui.screens.menu import MenuScreen
+from ui.screens.placeholder import PlaceholderScreen
 
 
-class HeartRateMonitor:
-    OLED_W = 128
-    OLED_H = 64
-    
-    def __init__(
-        self,
-        scl_pin=15,
-        sda_pin=14,
-        i2c_freq=400000
-    ):
-        self.i2c = I2C(1, scl=Pin(scl_pin), sda=Pin(sda_pin), freq=i2c_freq)
-        self.oled = SSD1306_I2C(self.OLED_W, self.OLED_H, self.i2c)
-        
-        self.startup = Startup()
-    
-    def run(self):
-        self.startup.run()
-        self.print_menu()
-    
-    def print_menu(self):
-        self.oled.fill(0)
-        self.oled.text("Task 1", 0, 0)
-        self.oled.text("Task 2", 0, 8)
-        self.oled.text("Task 3", 0, 16)
-        self.oled.show()
+def build_screens():
+    """Create all screens. Placeholders stand in for the ones not written yet."""
+    screens = {ScreenId.MENU: MenuScreen()}
+    for screen_id, title in zip(Ui.MENU_TARGETS, Ui.MENU_ITEMS):
+        screens[screen_id] = PlaceholderScreen(title)
+    return screens
 
-if __name__ == "__main__":
-    heartRateMonitor = HeartRateMonitor()
-    heartRateMonitor.run()
+
+def main():
+    """Entry point: build the objects, pass them in, start the app."""
+    encoder = Encoder()
+    display = Display()
+    App(encoder, display, build_screens()).run()
+
+
+main()
