@@ -49,7 +49,9 @@ if __name__ == "__main__":
         for sample in sampler.read_new_samples():
             if detector.update(sample):
                 recorder.add(detector.get_last_ppi_ms())
-    sampler.stop()
+                bpm = detector.get_bpm()
+                if bpm is not None:
+                    print("BPM: {:.0f}".format(bpm))
 
     result = HrvAnalysis(recorder.get_ppis())
     print("Mean PPI: {:.0f} ms".format(result.mean_ppi))
