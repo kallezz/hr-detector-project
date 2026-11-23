@@ -20,6 +20,7 @@ class PeakDetector:
         self._sample_index = 0
         self._last_beat_index = None
         self._intervals = []
+        self._last_ppi = None
         
         
     def get_bpm(self):
@@ -69,9 +70,17 @@ class PeakDetector:
 
     def _register_beat(self):
         if self._last_beat_index is not None:
-            self._add_interval(self._sample_index - self._last_beat_index)
+            self._last_ppi = self._sample_index - self._last_beat_index
+            self._add_interval(self._last_ppi)
         self._last_beat_index = self._sample_index
-
+        
+        
+    def get_last_ppi_ms(self):
+        if self._last_ppi is None:
+            return None
+        return self._last_ppi * 1000 // Sampling.RATE_HZ
+    
+        
     def _add_interval(self, interval):
         if interval > self._max_interval:
             self._intervals = []

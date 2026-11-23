@@ -38,13 +38,21 @@ class PpgSampler:
 
 if __name__ == "__main__":
     from analysis.threshold import PeakDetector
-    from config import Ui
-    
+    from analysis.ppi_recorder import PpiRecorder
+    from analysis.hrv import HrvAnalysis
 
     sampler = PpgSampler(PPGSensor())
     detector = PeakDetector()
+    recorder = PpiRecorder()
     sampler.start()
-    while True:
+    while not recorder.is_done():
         for sample in sampler.read_new_samples():
             if detector.update(sample):
-                print("Heartbeat, BPM:", detector.get_bpm())
+                recorder.add(detector.get_last_ppi_ms())
+    sampler.stop()
+
+    result = HrvAnalysis(recorder.get_ppis())
+    print("Mean PPI: {:.0f} ms".format(result.mean_ppi))
+    print("Mean HR: {:.0f} bpm".format(result.mean_hr))
+    print("RMSSD: {:.0f} ms".format(result.rmssd))
+    print("SDNN: {:.0f} ms".format(result.sdnn))

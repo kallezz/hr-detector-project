@@ -35,6 +35,7 @@ class Analysis:
     THRESHOLD_UPDATE_SAMPLES = 25   
     MIN_SIGNAL_AMPLITUDE = 700      
     BEATS_TO_AVERAGE = 5
+    MAX_PPI_CHANGE_RATIO = 0.3
 
 class Display:
     WIDTH = 128
