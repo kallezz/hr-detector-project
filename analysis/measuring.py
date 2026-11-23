@@ -34,6 +34,15 @@ class PpgSampler:
         fifo = self._fifo
         if (fifo.head + 1) % fifo.size != fifo.tail:
             fifo.put(self._sensor.read())
+            
+            
+def update_bpm(sampler, detector):
+    for sample in sampler.read_new_samples():
+        detector.update(sample)
+    bpm = detector.get_bpm()
+    if bpm is None:
+        return None
+    return round(bpm)
 
 
 if __name__ == "__main__":
@@ -58,3 +67,4 @@ if __name__ == "__main__":
     print("Mean HR: {:.0f} bpm".format(result.mean_hr))
     print("RMSSD: {:.0f} ms".format(result.rmssd))
     print("SDNN: {:.0f} ms".format(result.sdnn))
+

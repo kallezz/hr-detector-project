@@ -24,7 +24,7 @@ class PeakDetector:
         
         
     def get_bpm(self):
-        if not self._intervals:
+        if not self._intervals or self._signal_lost():
             return None
         mean_interval = sum(self._intervals) / len(self._intervals)
         return self._samples_per_minute / mean_interval
@@ -80,7 +80,10 @@ class PeakDetector:
             return None
         return self._last_ppi * 1000 // Sampling.RATE_HZ
     
-        
+    def _signal_lost(self):
+        return (self._sample_index - self._last_beat_index) > self._max_interval
+    
+    
     def _add_interval(self, interval):
         if interval > self._max_interval:
             self._intervals = []
