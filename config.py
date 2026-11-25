@@ -40,6 +40,7 @@ class Analysis:
 class Display:
     WIDTH = 128
     HEIGHT = 64
+    COLOR_ON = 1
     LINE_HEIGHT = 8
     GRAPH_TOP = 16
     GRAPH_HEIGHT = 40
@@ -67,6 +68,7 @@ class Input:
     PRESS = "press"
 
 class ScreenId:
+    STARTUP = "startup"
     MENU = "menu"
     HEART_RATE = "heart_rate"
     HRV = "hrv"
@@ -74,11 +76,27 @@ class ScreenId:
     HISTORY = "history"
 
 class Ui:
+    START_SCREEN = ScreenId.STARTUP
     ERROR_RETURN_TIMEOUT_S = 3       # from the error screen in the criteria
-    LED_BRIGHTNESS = 40
     MENU_ITEMS = ("Measure HR", "HRV analysis", "Kubios", "History")
     MENU_TARGETS = (ScreenId.HEART_RATE, ScreenId.HRV, ScreenId.KUBIOS, ScreenId.HISTORY)
     MENU_X = 0
     MENU_CURSOR = ">"
     FRAME_INTERVAL_MS = 50
     PATIENT_NAME = "Patient"         # level 4: sent with MQTT data
+
+class StartupAnim:
+    HEART_SCALE = 1.4
+    HEART_GAP = 0.6              # bottom opening width
+    HEART_STEPS = 48
+    HEART_Y_OFFSET = 2.5
+    PULSES_PER_SIDE = 2
+    MARGIN = 6                   # clear space between pulses and the heart
+    INTERPOLATION_STEP = 4       # keeps the drawing speed even
+    PULSE_WIDTH = 6
+    PULSE_SLOT_MARGIN = 2
+    PULSE_MIN_HEIGHT = 5
+    PULSE_MAX_HEIGHT = 12
+    SEGMENTS_PER_FRAME = 4       # segments revealed per App frame
+    HOLD_MS = 1000               # pause on the finished drawing
+

@@ -20,7 +20,7 @@ class HeartRateScreen(Screen):
     def enter(self):
         self._sampler = PpgSampler(PPGSensor())
         self._detector = PeakDetector()
-        self._led = Led(Pins.HEARTBEAT_LED, brightness=Ui.LED_BRIGHTNESS)
+        self._led = Led(Pins.HEARTBEAT_LED)
         self._bpm = None
         self._beats = 0
         self._sampler.start()
@@ -45,5 +45,5 @@ class HeartRateScreen(Screen):
     def draw(self, display):
         display.clear()
         points = self._detector.get_graph_points(Display.WIDTH)
-        draw_measure_view(display, "Heart rate", self._bpm, "Press: back", points)
+        draw_measure_view(display, "Heart rate", self._bpm, "Press to go back", points)
         display.show()

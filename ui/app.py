@@ -13,7 +13,7 @@ class App:
         self._display = display
         self._screens = screens          # dict: ScreenId -> Screen
         self._current = None
-        self._switch_to(ScreenId.MENU)
+        self._switch_to(ScreenId.STARTUP)
 
     def run(self):
         while True:
