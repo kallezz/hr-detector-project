@@ -27,6 +27,9 @@ class Display:
 
     def text(self, string, x, y):
         self._oled.text(string, x, y)
+    
+    def line(self, x0, y0, x1, y1):
+        self._oled.line(x0, y0, x1, y1, DisplayConfig.COLOR_ON)
 
     def show(self):
         self._oled.show()

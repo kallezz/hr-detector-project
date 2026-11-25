@@ -1,112 +1,56 @@
-import math
-import random
-import time
-from machine import Pin, I2C
-from ssd1306 import SSD1306_I2C
+from time import ticks_ms, ticks_diff
+
+from config import Input, ScreenId, StartupAnim as Anim
+from ui.screen import Screen
+from ui.assets.startup_path import StartupPath
 
 
-class Startup:
-    OLED_W = 128
-    OLED_H = 64
+class StartupScreen(Screen):
+    """Boot animation: an ECG line draws itself into a heart, then the menu opens."""
 
-    def __init__(
-        self,
-        scl_pin=15,
-        sda_pin=14,
-        i2c_freq=400000,
-        heart_scale=1.4,
-        heart_gap=0.6,      # bigger = wider opening at the bottom
-        pulses_per_side=2,
-        margin=6,           # clear space between pulses and the heart
-        batch=1,            # segments drawn per display refresh
-        frame_ms=0,         # extra delay per refresh
-    ):
-        self.i2c = I2C(1, scl=Pin(scl_pin), sda=Pin(sda_pin), freq=i2c_freq)
-        self.oled = SSD1306_I2C(self.OLED_W, self.OLED_H, self.i2c)
-        self.batch = batch
-        self.frame_ms = frame_ms
-        self.heart_scale = heart_scale
-        self.heart_gap = heart_gap
-        self.pulses_per_side = pulses_per_side
-        self.margin = margin
+    def __init__(self):
+        self._path_builder = StartupPath()
+        self._path = []
+        self._reached = 0          # last path point that should be visible
+        self._drawn = 0            # last path point already drawn
+        self._needs_clear = True
+        self._finished_ms = None
 
-    @staticmethod
-    def _add(pts, x, y, step=4):
-        """Append a point, filling in intermediate points so the drawing speed stays even."""
-        if pts:
-            px, py = pts[-1]
-            n = max(abs(x - px), abs(y - py)) // step
-            for k in range(1, n):
-                pts.append((int(px + (x - px) * k / n), int(py + (y - py) * k / n)))
-        pts.append((x, y))
+    def enter(self):
+        """Build a fresh random path and restart the animation."""
+        self._path = self._path_builder.build()
+        self._reached = 0
+        self._drawn = 0
+        self._needs_clear = True
+        self._finished_ms = None
 
-    def _heart(self):
-        s = self.heart_scale
-        cx = self.OLED_W // 2
-        g = self.heart_gap
-        steps = 48
-        pts = []
-        for i in range(steps + 1):
-            t = math.pi + g + (2 * math.pi - 2 * g) * i / steps
-            hx = 16 * math.sin(t) ** 3
-            hy = (13 * math.cos(t) - 5 * math.cos(2 * t)
-                  - 2 * math.cos(3 * t) - math.cos(4 * t))
-            pts.append((int(cx + hx * s), int(32 - (hy + 2.5) * s)))
-        return pts
+    def handle_input(self, event):
+        """Any press skips the animation."""
+        if event == Input.PRESS:
+            return ScreenId.MENU
+        return None
 
-    def _pulses(self, pts, y, zone_start, zone_end):
-        """Add random ECG-style pulses, all inside [zone_start, zone_end]."""
-        n = self.pulses_per_side
-        slot = (zone_end - zone_start) // n
-        for i in range(n):
-            px = zone_start + i * slot + random.randint(0, max(0, slot - 8))
-            h = random.randint(5, 12)
-            if random.randint(0, 1):
-                h = -h
-            self._add(pts, px, y)
-            self._add(pts, px + 2, y - h)
-            self._add(pts, px + 4, y + h // 2)
-            self._add(pts, px + 6, y)
+    def update(self):
+        """Reveal more of the path, then hold briefly and open the menu."""
+        last = len(self._path) - 1
+        if self._reached < last:
+            self._reached = min(self._reached + Anim.SEGMENTS_PER_FRAME, last)
+        elif self._finished_ms is None:
+            self._finished_ms = ticks_ms()
+        elif ticks_diff(ticks_ms(), self._finished_ms) >= Anim.HOLD_MS:
+            return ScreenId.MENU
+        return None
 
-    def _build_path(self):
-        heart = self._heart()
-        y = heart[0][1]  # baseline = height where the heart opens
-        heart_left = min(p[0] for p in heart)
-        heart_right = max(p[0] for p in heart)
-        m = self.margin
-
-        pts = []
-
-        # Left side: pulses only to the left of the heart
-        self._add(pts, 0, y)
-        self._pulses(pts, y, 0, heart_left - m)
-        self._add(pts, heart[0][0], y)
-
-        # Heart
-        for x, hy in heart[1:]:
-            self._add(pts, x, hy)
-
-        # Right side: pulses only to the right of the heart
-        self._add(pts, heart_right + m, y)
-        self._pulses(pts, y, heart_right + m, self.OLED_W - 1)
-        self._add(pts, self.OLED_W - 1, y)
-
-        return pts
-
-    def run(self):
-        path = self._build_path()  # new random pulses every run
-
-        self.oled.fill(0)
-        self.oled.show()
-
-        for i in range(1, len(path)):
-            x0, y0 = path[i - 1]
-            x1, y1 = path[i]
-            self.oled.line(x0, y0, x1, y1, 1)
-            if i % self.batch == 0:
-                self.oled.show()
-                if self.frame_ms:
-                    time.sleep_ms(self.frame_ms)
-
-        self.oled.show()
-        time.sleep(1)
+    def draw(self, display):
+        """Draw only the new segments; the earlier ones are still on screen."""
+        if self._needs_clear:
+            display.clear()
+            self._needs_clear = False
+        elif self._drawn == self._reached:
+            return
+        for i in range(self._drawn + 1, self._reached + 1):
+            x0, y0 = self._path[i - 1]
+            x1, y1 = self._path[i]
+            display.line(x0, y0, x1, y1)
+        self._drawn = self._reached
+        display.show()
