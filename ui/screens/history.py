@@ -1,14 +1,15 @@
 from config import Display as DisplayConfig, Input, ScreenId, Storage, Ui
 from ui.screen import Screen
+from storage.history_store import HistoryStore
 
 
 class HistoryScreen(Screen):
     def __init__(self, history_store):
         super().__init__()
-        self._store = history_store
+        self._store = HistoryStore()
         self._records = []
         self._selected_index = 0
-        self._open_record = None      # the measurement on the detail page
+        self._open_record = None  # the measurement on the detail page
 
     def enter(self):
         self._records = self._store.load()[:Ui.HISTORY_RECORD_ROWS]
