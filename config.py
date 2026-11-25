@@ -69,6 +69,13 @@ class Network:
 class Storage:
     HISTORY_FILE = "history.json"
     HISTORY_MAX_ENTRIES = 5          # criteria: at least 3
+    FIELD_TIME = "time"              # keys of one saved measurement
+    FIELD_MEAN_HR = "mean_hr"
+    FIELD_MEAN_PPI = "mean_ppi"
+    FIELD_RMSSD = "rmssd"
+    FIELD_SDNN = "sdnn"
+    FIELD_SNS = "sns"                # only Kubios results have SNS and PNS
+    FIELD_PNS = "pns"
 
 class Input:
     LEFT = "left"
@@ -92,6 +99,24 @@ class Ui:
     MENU_CURSOR = ">"
     FRAME_INTERVAL_MS = 50
     PATIENT_NAME = "Patient"         # level 4: sent with MQTT data
+    HISTORY_ROW_HEIGHT = Display.LINE_HEIGHT + 2   # 6 list rows fit in 64 px
+    HISTORY_LIST_ROWS = Display.HEIGHT // HISTORY_ROW_HEIGHT
+    HISTORY_RECORD_ROWS = HISTORY_LIST_ROWS - 1    # the last row is Back
+    HISTORY_TEXT_X = 0
+    HISTORY_LINE_END_X = Display.WIDTH - 1         # end of the selection underline
+    HISTORY_BACK_LABEL = "Back"
+    HISTORY_EMPTY_TEXT = "No history yet"
+    HISTORY_HINT_TEXT = "Press to go back"
+    HISTORY_FIELD_FORMAT = "{}: {}"
+    HISTORY_FIELDS = (
+        ("MEAN HR", Storage.FIELD_MEAN_HR, "{:.0f}"),
+        ("MEAN PPI", Storage.FIELD_MEAN_PPI, "{:.0f}"),
+        ("RMSSD", Storage.FIELD_RMSSD, "{:.0f}"),
+        ("SDNN", Storage.FIELD_SDNN, "{:.0f}"),
+        ("SNS", Storage.FIELD_SNS, "{:.3f}"),
+        ("PNS", Storage.FIELD_PNS, "{:.3f}"),
+    )
+
 
 class StartupAnim:
     HEART_SCALE = 1.4
