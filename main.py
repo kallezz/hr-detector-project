@@ -1,7 +1,6 @@
 from config import ScreenId, Ui
 from hardware.display import Display
 from hardware.encoder import Encoder
-from storage.history_store import HistoryStore
 from ui.app import App
 from ui.screens.startup import StartupScreen
 from ui.screens.menu import MenuScreen
@@ -17,7 +16,7 @@ def build_screens():
         ScreenId.MENU: MenuScreen(),
         ScreenId.HEART_RATE: HeartRateScreen(),
         ScreenId.HRV: HrvScreen(),
-        ScreenId.HISTORY: HistoryScreen(HistoryStore()),
+        ScreenId.HISTORY: HistoryScreen(),
     }
     for screen_id, title in zip(Ui.MENU_TARGETS, Ui.MENU_ITEMS):
         if screen_id not in screens:
