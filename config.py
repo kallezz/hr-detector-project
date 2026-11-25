@@ -52,10 +52,18 @@ class Network:
     WIFI_CONNECT_TIMEOUT_S = 15
     WIFI_RETRY_COUNT = 3
     MQTT_PORT = 1883
+    MQTT_BROKER_HOST = "http://kmd652g11.asuscomm.com"
     MQTT_TOPIC_REQ = "kubios/request"
     MQTT_TOPIC_RES = "kubios/response"
+    TOPIC_DEVICES_ADD = "database/devices/add"
+    TOPIC_PATIENTS_ADD = "database/patients/add"
+    TOPIC_PATIENTS_LIST = "database/patients/list"
+    TOPIC_RECORDS_ADD = "database/records/add"
+    TOPIC_DB_RESPONSE = "database/response"
+    KUBIOS_DATA_TYPE = "RRI"
+    KUBIOS_ANALYSIS_TYPE = "readiness"
+    NTP_HOST = "pool.ntp.org"
     MQTT_KEEPALIVE_S = 60
-    NTP_HOST = "http://kmd652g11.asuscomm.com/"
     KUBIOS_TIMEOUT_S = 30
 
 class Storage:
