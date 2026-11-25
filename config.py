@@ -75,6 +75,7 @@ class ScreenId:
 
 class Ui:
     ERROR_RETURN_TIMEOUT_S = 3       # from the error screen in the criteria
+    LED_BRIGHTNESS = 40
     MENU_ITEMS = ("Measure HR", "HRV analysis", "Kubios", "History")
     MENU_TARGETS = (ScreenId.HEART_RATE, ScreenId.HRV, ScreenId.KUBIOS, ScreenId.HISTORY)
     MENU_X = 0
