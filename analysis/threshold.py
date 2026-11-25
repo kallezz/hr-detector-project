@@ -21,6 +21,7 @@ class PeakDetector:
         self._last_beat_index = None
         self._intervals = []
         self._last_ppi = None
+        self._beat_count = 0
         
         
     def get_bpm(self):
@@ -57,28 +58,45 @@ class PeakDetector:
         self._amplitude = high - low
         self._threshold = low + int(self._amplitude * Analysis.PEAK_THRESHOLD_RATIO)
 
+
     def _is_beat(self, sample):
         if self._previous is None or self._amplitude < Analysis.MIN_SIGNAL_AMPLITUDE:
             return False
         crossed_up = self._previous < self._threshold <= sample
         return crossed_up and self._far_from_last_beat()
 
+
     def _far_from_last_beat(self):
         if self._last_beat_index is None:
             return True
         return (self._sample_index - self._last_beat_index) >= self._min_interval
+
 
     def _register_beat(self):
         if self._last_beat_index is not None:
             self._last_ppi = self._sample_index - self._last_beat_index
             self._add_interval(self._last_ppi)
         self._last_beat_index = self._sample_index
+        self._beat_count += 1
         
         
     def get_last_ppi_ms(self):
         if self._last_ppi is None:
             return None
         return self._last_ppi * 1000 // Sampling.RATE_HZ
+    
+    
+    def get_beat_count(self):
+        return self._beat_count
+
+
+    def get_graph_points(self, count):
+        if self._window is None:
+            return []
+        size = self._window_size
+        return [self._window[(self._write_pos + i * size // count) % size]
+                for i in range(count)]
+    
     
     def _signal_lost(self):
         return (self._sample_index - self._last_beat_index) > self._max_interval

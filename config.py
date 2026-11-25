@@ -132,3 +132,4 @@ class StartupAnim:
     PULSE_MAX_HEIGHT = 12
     SEGMENTS_PER_FRAME = 4       # segments revealed per App frame
     HOLD_MS = 1000               # pause on the finished drawing
+
