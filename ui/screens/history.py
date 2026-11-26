@@ -1,6 +1,6 @@
 from config import Display as DisplayConfig, Input, ScreenId, Storage, Ui
-from ui.screen import Screen
 from storage.history_store import HistoryStore
+from ui.screen import Screen
 
 
 class HistoryScreen(Screen):
@@ -8,7 +8,7 @@ class HistoryScreen(Screen):
         self._store = HistoryStore()
         self._records = []
         self._selected_index = 0
-        self._open_record = None  # the measurement on the detail page
+        self._open_record = None      # the measurement on the detail page
 
     def enter(self):
         self._records = self._store.load()[:Ui.HISTORY_RECORD_ROWS]
@@ -51,7 +51,6 @@ class HistoryScreen(Screen):
         return None
 
     def _row_labels(self):
-        """The list rows: one time per measurement, then the Back row."""
         labels = [record.get(Storage.FIELD_TIME, "") for record in self._records]
         labels.append(Ui.HISTORY_BACK_LABEL)
         return labels
@@ -59,17 +58,12 @@ class HistoryScreen(Screen):
     def _draw_list(self, display):
         first_row = 0
         if not self._records:
-            display.text(Ui.HISTORY_EMPTY_TEXT, Ui.HISTORY_TEXT_X, 0)
+            display.text(Ui.HISTORY_EMPTY_TEXT, Ui.MENU_X, 0)
             first_row = 1
         for index, label in enumerate(self._row_labels()):
+            cursor = Ui.MENU_CURSOR if index == self._selected_index else " "
             row_y = (index + first_row) * Ui.HISTORY_ROW_HEIGHT
-            display.text(label, Ui.HISTORY_TEXT_X, row_y)
-            if index == self._selected_index:
-                underline_y = row_y + DisplayConfig.LINE_HEIGHT
-                display.line(
-                    Ui.HISTORY_TEXT_X, underline_y,
-                    Ui.HISTORY_LINE_END_X, underline_y,
-                )
+            display.text(cursor + label, Ui.MENU_X, row_y)
 
     def _draw_detail(self, display):
         record = self._open_record

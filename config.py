@@ -101,11 +101,10 @@ class Ui:
     MENU_TEXT_X = 18
     FRAME_INTERVAL_MS = 50
     PATIENT_NAME = "Patient"         # level 4: sent with MQTT data
-    HISTORY_ROW_HEIGHT = Display.LINE_HEIGHT + 2   # 6 list rows fit in 64 px
+    HISTORY_ROW_HEIGHT = Display.LINE_HEIGHT   # 6 list rows fit in 64 px
     HISTORY_LIST_ROWS = Display.HEIGHT // HISTORY_ROW_HEIGHT
     HISTORY_RECORD_ROWS = HISTORY_LIST_ROWS - 1    # the last row is Back
     HISTORY_TEXT_X = 0
-    HISTORY_LINE_END_X = Display.WIDTH - 1         # end of the selection underline
     HISTORY_BACK_LABEL = "Back"
     HISTORY_EMPTY_TEXT = "No history yet"
     HISTORY_HINT_TEXT = "Press to go back"
