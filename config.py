@@ -97,6 +97,8 @@ class Ui:
     MENU_TARGETS = (ScreenId.HEART_RATE, ScreenId.HRV, ScreenId.KUBIOS, ScreenId.HISTORY)
     MENU_X = 0
     MENU_CURSOR = ">"
+    MENU_ICON_X = 8        # cursor at MENU_X, then icon, then text
+    MENU_TEXT_X = 18
     FRAME_INTERVAL_MS = 50
     PATIENT_NAME = "Patient"         # level 4: sent with MQTT data
     HISTORY_ROW_HEIGHT = Display.LINE_HEIGHT + 2   # 6 list rows fit in 64 px
@@ -117,6 +119,8 @@ class Ui:
         ("PNS", Storage.FIELD_PNS, "{:.3f}"),
     )
 
+class Icons:
+    SIZE = 8
 
 class StartupAnim:
     HEART_SCALE = 1.4

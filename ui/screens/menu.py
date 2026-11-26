@@ -1,11 +1,14 @@
 from config import Input, Ui, Display
 from ui.screen import Screen
+from ui.assets.icons import MenuIcons
 
 
 class MenuScreen(Screen):
     """Main menu: turn to move the selection, press to open a screen."""
 
     def __init__(self):
+        self._selected = 0
+        self._icons = MenuIcons()
         self._selected = 0
 
     def handle_input(self, event):
@@ -20,6 +23,9 @@ class MenuScreen(Screen):
     def draw(self, display):
         display.clear()
         for index, item in enumerate(Ui.MENU_ITEMS):
-            cursor = Ui.MENU_CURSOR if index == self._selected else " "
-            display.text(cursor + item, Ui.MENU_X, index * Display.LINE_HEIGHT)
+            y = index * Display.LINE_HEIGHT
+            if index == self._selected:
+                display.text(Ui.MENU_CURSOR, Ui.MENU_X, y)
+            display.blit(self._icons.for_screen(Ui.MENU_TARGETS[index]), Ui.MENU_ICON_X, y)
+            display.text(item, Ui.MENU_TEXT_X, y)
         display.show()

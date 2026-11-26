@@ -30,6 +30,10 @@ class Display:
     
     def line(self, x0, y0, x1, y1):
         self._oled.line(x0, y0, x1, y1, DisplayConfig.COLOR_ON)
+        
+    def blit(self, framebuffer, x, y):
+        """Draw a framebuf.FrameBuffer (icon) at x, y."""
+        self._oled.blit(framebuffer, x, y)
 
     def show(self):
         self._oled.show()
