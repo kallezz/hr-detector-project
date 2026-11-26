@@ -4,7 +4,7 @@ from storage.history_store import HistoryStore
 
 
 class HistoryScreen(Screen):
-    def init(self):
+    def __init__(self):
         self._store = HistoryStore()
         self._records = []
         self._selected_index = 0
